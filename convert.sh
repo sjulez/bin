@@ -18,6 +18,7 @@ if [ ! -a /usr/bin/convert ] ; then
    fi
 fi
 
+# i made a comment here to test a git-diff and a commit
 # to remember the starting-point (see last if-statement to get the intention)
 START=$PWD
 
