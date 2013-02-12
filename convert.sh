@@ -3,6 +3,8 @@
 # of the imagemagick-package to resize a bunch of pictures in a Directory.
 # As I said, it's slow but I like it =)
 
+
+# second test-comment
 # Check if imagemagick is installed
 if [ ! -a /usr/bin/convert ] ; then
    echo "I didn't found the convert-Module at it's standard-install-path \n Assuming imagemagick not to be installed! \n --> Do you want to install it now? (Y/N)"
