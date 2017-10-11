@@ -1,0 +1,24 @@
+#!/bin/bash
+############################################################
+#                                                          #
+# Check if ipv6 is disabled on machine                     #
+#                                                          #
+# by Julian Scharrenbach - www.picotronic.de               #
+#                                                          #
+############################################################
+#
+# Exit-Codes:
+# 0 = $STATE_OK
+# 1 = $STATE_WARNING
+# 2 = $STATE_CRITICAL -> ther is no critical state in this check
+
+ip6=$(ip -6 addr show)
+
+if [ "$ip6" = "" ]
+then
+	echo "OK - Result is empty, therefore ipv6 is disabled"
+	exit 0
+else
+	echo "WARNING - Please examine String and check for disabled ipv6 - Return-iString is: $ip6"
+	exit 1
+fi

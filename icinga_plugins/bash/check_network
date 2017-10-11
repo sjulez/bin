@@ -1,0 +1,46 @@
+#!/bin/bash
+############################################################
+#                                                          #
+# Watch network-interfaces with Nagios - The simple script #
+#                                                          #
+# by Julian Scharrenbach - www.picotronic.de               #
+# original by Markus Walther
+#                                                          #
+############################################################
+#                                                          #
+# Usage:                                                   #
+#  1. Copy this script to the nagios plugin-directory      #
+#  2. Set the exec-rights (chmod a+x check_network)        #
+#  3. If missing, install "ethtool"                        #
+#  4. Comment out "Defaults requiretty" in /etc/sudoers    #
+#     and let user nagios (or icinga) execute ethtool:     #
+#      nagios ALL=NOPASSWD:/sbin/ethtool                   #
+#  5. commands.cfg:    $USER1$/check_network $ARG1$        #
+#  6. services.cfg:    check_network!eth0                  #
+#                                                          #
+#  Now it should work fine :)                              #
+#                                                          #
+# I changed the network-script from Markus Walther to use  #
+# ethtool instead of mii-tool                              #
+############################################################
+#
+# Read the command-input
+card=$1
+#
+# Exit-Codes:
+# 0 = $STATE_OK
+# 1 = $STATE_WARNING
+# 2 = $STATE_CRITICAL
+
+if [[ $(/sbin/ethtool $card 2> /dev/null | grep 1000Mb/s) && $? -eq 0 ]]
+	then
+		echo "OK - Interface $card works fine and runs on 1GBit/s"
+		exit 0
+elif [[ $(/sbin/ethtool $card > /dev/null | grep 100Mb/s) && $? -eq 0 ]]
+then
+		echo "WARNING - Interface $card is only running on 100Mb/s!"
+		exit 1
+else
+	echo "CRITICAL - Check Interface $card on $(hostname) immediately!"
+  exit 2
+fi
