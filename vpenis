@@ -1,0 +1,17 @@
+#!/bin/sh
+export LC_ALL=C
+
+# check if bc installed
+if ! which bc > /dev/null; then
+    echo bc not installed.
+    exit 1
+fi
+
+# run calculation
+(
+    echo -n `uptime|grep day|sed 's/.*up \([0-9]*\) day.*/\1\/10+/'`
+    echo -n `cat /proc/cpuinfo|grep '^cpu MHz'|awk '{print $4"/30 +";}'`
+    echo -n `free|grep '^Mem'|awk '{print $2"/1024/3+"}'`
+    echo `df -P -k -x nfs -x smbfs | egrep -v '(1k|1024)-blocks' | awk '{if ($1 ~ "/dev/(cciss|scsi|sd|gpfs)"){ s+= $2} s+= $2;} END {print s"/1024/50/15+70";}'`
+) | bc | sed 's/\(.$\)/.\1cm/'
+
